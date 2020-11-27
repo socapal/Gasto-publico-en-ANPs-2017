@@ -619,3 +619,37 @@ GDF
 
 
 
+# 6. Bases de datos -------------------------------------------------------
+library(formattable)
+#Rescalamos la distancia mínima.
+EscalaMinMax <- function(x){
+  return((x-min(x))/(max(x)-min(x)))}
+
+load("cordf_GEOS.RData")
+#Aplicamos la función.
+cordf_GEOS$c_distmin=EscalaMinMax(cordf_GEOS$c_distmin)
+
+Tabla_1=cordf_GEOS[1:5,] #Reducimos la tabla
+#Función de redondeo de Jeromy Anglim.
+redondear_df <- function(x, digits) {
+  # round all numeric variables
+  # x: data frame 
+  # digits: number of digits to round
+  numeric_columns <- sapply(x, mode) == 'numeric'
+  x[numeric_columns] <-  round(x[numeric_columns], digits)
+  x
+}
+
+
+formattable(redondear_df(Tabla_1, 3), align =c("l","c","c","c","c", "c", "c", "c", "r"), list(
+  `CVE_ENT` = formatter("span", style = ~ style(color = "grey",font.weight = "bold")), 
+  `IND_002` = color_bar(Complementario),
+  `IND_824` = color_bar(Complementario),
+  `IND_047` = color_bar(Complementario),
+  `IND_055` = color_bar(Complementario),
+  `IND_141` = color_bar(VDemograficas),
+  `IND_128` = color_bar(VDemograficas),
+  `Ethnic` = color_bar(VDemograficas),
+  `c_distmin` = color_bar(VDemograficas)
+  ))
+

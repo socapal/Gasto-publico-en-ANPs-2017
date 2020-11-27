@@ -1,0 +1,10 @@
+@article{alesina1999public,
+  title={Public goods and ethnic divisions},
+  author={Alesina, Alberto and Baqir, Reza and Easterly, William},
+  journal={The Quarterly journal of economics},
+  volume={114},
+  number={4},
+  pages={1243--1284},
+  year={1999},
+  publisher={MIT Press}
+}

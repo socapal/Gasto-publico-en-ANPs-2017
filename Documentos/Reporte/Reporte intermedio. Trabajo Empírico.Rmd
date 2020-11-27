@@ -1,0 +1,111 @@
+---
+title: "Reporte de Trabajo Empírico - Gasto Público en Áreas Naturales Protegidas"
+author: "Sebastián Ocampo Palacios"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+bibliography: Referencias.bib
+csl: chicago-fullnote-bibliography-16th-edition.csl
+---
+```{r, echo=FALSE}
+#Definimos los colores para la identidad gráfica del reporte.
+VDemograficas = "#C05555"
+VANPs = "#59886B"
+VFiscales = "#FFC85C"
+Complementario = "#FFF8C1"
+
+```
+
+## Introducción
+
+ \hspace{5mm}El presente proyecto de investigación tiene como objetivo principal presentar un modelo introductorio sobre el efecto de la diversidad étnica y la distancia media al Área Natural Protegida (ANPs) más cercana en el tamaño del gasto público destinado a su protección. Bajo ese propósito, la pregunta que rige la investigación es: ¿existen variaciones en el gasto público en áreas naturales que puedan ser parcialmente explicadas por la heterogeneidad étnica y la distancia media de cada entidad? El trabajo consta de regresiones simples del presupuesto y las cantidades ejercidas por cada estado en la protección ambiental para las variables de distancia media y diversidad étnica.
+ 
+Es fundamental esclarecer que durante el trabajo no son tomadas en consideración aspectos de Economía Política que son fundamentales a la hora de investigar  la provisión centralizada de bienes públicos locales. Esto es natural, pues la fortaleza de este trabajo es la creación de bases de datos sobre las cuáles extender el estudio empírico para modelos económicos más adecuados. Aún más, el proyecto funciona como base para una investigación empírica de los modelos de provisión de bienes públicos de Beach y Jones, y Beasley y Coate en el contexto de gasto público en Áreas Naturales Protegidas.^[Consúltese @beach2017gridlock; @besley2003centralized]
+
+## Antecedentes teóricos
+\hspace{5mm}El trabajo replica la investigación de Alesina, Baqir y Easterly al incorporar un modelo sencillo para medir el efecto de la diversidad étnica en la provisión de bienes públicos *locales*[@alesina1999public]. Bajo la internalización de la restricción al parámetro $a> 0$, la restricción presupuestaria individual $c-t=y$ y la restricción de presupuesto gubernamental $g=t$, el modelo está dado por la siguiente ecuación: 
+$$U_i=g^a(1-l_j)+y-g $$
+Donde $U_i$ representa la utilidad individual de cada persona dentro de la jurisdicción local estudiada, $l_j$ representa el tipo de bien público elegido y la diferencia $y-g$ representa el ingreso restante tras la aportación tributaria. Visiblemente, la utilidad es afectada de forma negativa tanto por la contribución al bien público y por la diferencia que resulta del tipo de bien público elegido ($1-l_j$). 
+
+Con esta función de utilidad, los autores plantean un juego de contribución en dos etapas. En la primera, las personas deciden el tamaño del bien público a elegir; en la segunda, eligen el tipo. De este modo, tras resolver por inducción hacia atrás, la decisión óptima de cada participante optimiza su aportación al bien público de la siguiente forma:
+$$g^*_i=[a(1-\hat{l_j})]^\frac{1}{(1-a)}$$
+\vspace{5mm}
+
+Los autores continuan el modelo al proponer, como corolario, que la cantidad de bien púbico decrecerá conforme más grande sea la distancia entre el bien público deseado y el bien público de quién represente al participante mediano $(1-\hat{l^*_i})$. Esto es, en sociedades en donde haya mayor diversidad étnica habrá un menor gasto en bienes públicos locales, además de que el tipo de bien estará sujeto a quién en esa sociedad represente al votante medio.
+ 
+Finalmente, la investigación empírica de Alesina y Baqir está dada por la regresión del gasto local por el índice étnico y una serie de variables demográficas que sirven de control. Entre sus hallazgos principales, logran confirmar su hipótesis sobre la disminución de gasto público en localidades de mayor diversidad étnica y  que la proporción total del gasto destinada a cada tipo de bien local también está sujeta a la composición étnica. 
+
+Adicionalmente, el modelo de investigación para el reporte considera un costo homogéneo de transporte como factor determinante de la decisión individual sobre la contribución al bien público. El incorporar un análisis espacial tiene como fundamento teórico una versión simplificada de la demanda introducida en el modelo  de Harold Hotelling^[@hotelling1990stability]. Además, tiene sustento empírico: una serie de valoraciones económicas de las ANPs realizada por *EcoValor Mx* utilizan el cálculo del costo de viaje al ANP como uno de los determinantes de la valoración económica de sus asistentes para cada una de las áreas investigadas.^[Para conocer más sobre las publicaciones del proyecto *EcoValor Mx*, consultar el siguiente vínculo: http://ecovalor.mx/documentos_interes_se.html.] 
+
+## Metodología 
+
+ El modelo planteado en el presente trabajo incorpora las dos variables antes mencionadas. Así, establece una conexión entre la disposición a pagar con la diversidad étnica de cada entidad y la distancia media de cada distrito. Dada la pregunta de investigación antes expuesta, ¿existen variaciones en el gasto público en áreas naturales que puedan ser parcialmente explicadas por la heterogeneidad étnica y la distancia media de cada entidad? El proyecto parte de la hipótesis de que, dada la localización de las ANPs en el país, la diversidad étnica tendrá un efecto positivo en la disposición a contribuir al gasto, mientras que la distancia reducirá esta disposición mediante los costos de transporte. De este modo, el modelo planteado está dado por lo siguiente:
+ 
+ Sea $y=c+t+d_i\overline{T}$ la restricción presupuestaria para cada persona dentro del juego, en donde $c$ representa al consumo, $t$ la colaboración y $d_i\overline{T}$ represente un costo constante y homógeneo de transporte $\overline{T}$ multiplicado por la distancia mínima del distrito electoral en el que se habita hacia el ANP más cercana $d_j$. Con $d_i\in[0,1]$, interprétese  al valor uno de distancia como la distancia máxima relativa a la distancia de los otros distritos y sea cero la distancia mínima. Finalmente, considere que el costo de transporte es nulo cuando no hay provisión del bien público local.
+ 
+ Luego tómese a $t=g$ como la restricción presupeustaria del gobierno, en donde el gasto es equivalente a la recaudación. Además, la utlidad individual será expresada como $U_i=g^a(1-l_j) + c$.
+ 
+ Entonces,la utilidad final de la persona está dada por la internalización de ambas restricciones en la función de utilidad:
+ $$U_i=g^a(1-l_j)+y-g-d_j\overline{T}$$
+ Análogamente al juego propuesto por Alesina, Baqir y Easterly, la decisión óptima al resolver por inducción hacia atrás la maximización $max_{g}$ \hspace{0.2mm} $U_i$resulta en:
+$$g^*_i=[a(1-\hat{l_j})]^\frac{1}{(1-a)}$$
+\vspace{1.5cm}
+ No obstante, el gasto está sujeto a una consideración adicional en donde se refleja un descuento adicional explicado por el costo en el transporte.
+ 
+$$
+\begin{cases}
+g^*> 0, & \text{ si }   U_{i|(g^*, \overline{T})} \geq0  \\ 
+ g^*=0, &\text{en cualquier otro caso}
+\end{cases}$$
+
+ 
+## Fuentes de datos y estadística descriptiva
+ Para el trabajo empírico son utilizadas dos bases de datos distintas. La primera "Estadísticas Intercensales a Escalas Geolectoraes" es el  resultado de la colaboración entre el INEGI y el INE para plasmar las estadísticas de la encuesta intercensal 2015 en la distritación federal del año 2017.^[INE-INEGI, Estadísticas Intercensales a Escalas Geodistritales, 2017. Disponible en  https://datos.gob.mx/busca/dataset/estadisticas-intercensales-a-escalas-geoelectorales]. Durante la realización del trabajo, reducimos la base de datos para que agrupe únicamente a  variables de posible interés.
+ 
+![Estadística Geodistrital](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla 1.png)
+
+Dentro de esta base de datos generada, los distritos están indexados a una *clave federal*  $(\text{Número de entidad}*100 + \text{Número de Distrito})$. Las primeras cuatro columnas son posibles variables de control: el porcentaje estatal de población ($IND_{002}$ de la Encuesta Intercensal 2015), el porcentaje de población de 60 años y más ($IND_{824}$), la densidad de población por km$^2$ ($IND_{047}$) y un estimador de viviendas totales particulares ($IND_{055}$). En cuanto a las variables independientes, tenemos la proporción de población autoadscrita como índigena ($IND_{141}$) y el porcentaje de población que se considera afrodescendiente ($IND_{128}$). Ambas variables son utilizadas para generar el índice étnico (\text{Ethnic}$=1-(IND_{141}+ IND_{128})$^[El índice étnico es similar a aquel utilizado por Alesina, Baqir y Easterly pues se asemeja a la fórmula en su diseño orginal \text{ETHNIC}$=1-\sum_{i}(Race_i)^2$.], el indicador principal de de diversidad étnica para el modelo. Así, el coeficiente debe ser intepretado en sus extremos como un nivel  de heterogeneidad étnica absoluta cuando alcanza el valor cero y como una sociedad completamente homogénea al arrojar el valor uno. Finalmente encontramos una aproximación para la distancia mínima (variable autogenerada $c_{distmin}$) entre el centroide estimado del polígono de cada distrito y el centroide estimado del polígono de su área natural protegida más cercana.^[Para el cálculo de la distancia mínima se utilizó el paquete $nngeo$ y los archivos $.shp$ ofrecidos en los sitios del INE y la CONANP. Es fundamental establecer que esta medida de distancia es una aproximación pobre, pero tecnológicamente accesible. La medida de distancia obtenida (en metros) fue transformada por una normalización min-máx.] 
+
+Para continuar, exploramos las correlaciones entre nuestras variables. La tabla de correlación muestra las correlaciones entre las variables:  los colores deben interpretarse *por columna*, en donde la correlación positiva más alta  coincide con la tonalidad más oscura y la correlación más negativa coincide con el tono más claro.
+
+![Correlación entre variables geoestadísticas](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla 1 - Cor.png) 
+
+
+ Dentro de la tabla de correlaciones, destaca la relación positiva de 0.275 entre el porcentaje de población estatal por distrito y el valor aproximado de distancia por sugerirnos que las ANPs están localizadas lejos de concentraciones de población (afectando así al tamaño del gasto). Este efecto se ve reforzado por una correlación negativa entre la densidad de población y la aproximación de distancia (-0.422). La variable de control de personas con sesenta años o más también parece estar relacionada con la distribución de población, siendo así que aumenta conjunto a la densidad de población (0.324) pero disminuye ante un mayor porcentaje de población estatal(-0.337). De forma poco sorpresiva, un  mayor valor para el estimador de viviendas particulares está relacionado postivamente a la densidad de población. 
+ 
+ En lo que se refiere a las variables particulares, preocupa el efecto que existe entre las dos variables independientes sobre las que se construye el índice étnico: la autoadscripción indígena y afrodescendiente tienen una relación positiva entre si de 0.173. Así también, la tabla confirma que las variables tienen una relación negativa diferenciada con el índice étnico (-0.99 y -0.27) acorde al porcentaje de población que representan. Ambos indicadores étnicos parecen tener una relación opuesta respecto de la densidad de población (-0.296 para índigenas y 0.115 para afrodescendientes) y el porcentaje de población estatal (0.104 y -0.214, respectivamente), no obstante esta relación parece atenuarse al incluirlas en el índice étnico (-0.080). Finalmente, es interesante la relación negativa a la distancia, que parece ser mínima para el porcentaje de población indígena (-0.035) e importante y negativa para la población afrodescendiente (-0.189), para después mantener una correlación tenue pero positiva al analizar el índice étnico (0.053). Finalmente, adjuntamos la tabla de estadística descriptiva para las variables estudiadas.^[Consultar los anexos para los diagramas de dispersión para la correlación de las variables.]
+
+![Estadística Descriptiva](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla 1 - Esta.Desc.png)
+
+La base de datos de estadística geointercensal, lamentablemente, no cuenta con variables fiscales. Es decir, no hay  datos sobre ingreso medio, pobreza en el distrito y por supuesto no contiene datos sobre tributación recaudada. En consecuencia, realizaremos el análisis de la hipótesis por medio del nivel estatal. Para lograr esto, el proyecto recupera los datos estatales que contiene la tabla de estadística intercensal antes mecionada, para después obtener la distancia media por entidad y agregar así los datos de gasto público provenientes de la Cuenta Pública 2017 para cada entidad. Como nota, los datos de Cuenta Pública para el 2017 se encuentran capturados en una base de datos propia que además contiene las cifras reportadas por los  presupuestos estatales en el 2017 para los rubros de presupuesto total, presupuesto inicial Secretaría de Medio Ambiente y protección ambiental.No obstante, no son consideradas para el análisis porque hasta el momento tienen problemas de homogenidad y algunas consideraciones técnicas. Así también, fue generada una solicitud de acceso a la información hacia la Comisión Nacional de Áreas Naturales Protegidas para que reporte las transferencias recibidas por los estados, aún no hay respuesta. 
+
+![Tabla II - Estadística Estatal](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla II - Variables.png)
+
+En la tabla superior es posible percatarse del uso de las mismas variables. Observamos que la clave federal está conformada por el número de entidad multiplicado por cien y en donde el promedio nacional se ve reflejado por la clave federal 0. Así, sólo salta a la vista la adición de la columna "Gasto Ajustado al Ingreso".Esta proporción es el resultado de dividir el gasto en la Secretaría de Medio Ambiente de cada entidad por los egresos totales reportados para cada una en la Cuenta Pública 2017. Como es evidente en la tabla de correlación, esta acción ayuda a atenuar el efecto que tiene el proceso de recaudación fiscal en la "disposición" de pagar por gasto ambiental. Es así como vemos una reducción en la correlación que tiene el porcentaje de población estatal y la proporción del gasto de un 0.968 a 0.003, lo mismo que ocurre con la cantidad de viviendas particulares (0.983 a 0.001).
+
+En lo que se refiere a las correlaciones de variables de población, vemos un incremento en la relación entre el porcentaje de población estatal y el estimador de viviendas particulares (0.999). A su vez, la correlación entre el porcentaje de población estatal y el porcentaje de personas mayores a sesenta años se ve reducido de un 0.324 a escala distrital hasta un valor de -0.070. Para este porcentaje, también encontramos una reducción importante de la magnitud de su efecto en las variables independientes: así, su relación con el porcentaje de población indígena pasa de un 0.104 a un -0.035, la conexión con el porcentaje de población afrodescendiente de -0.214 a un 0.085 y con el índice étnico un cambio de signo de un -0.080 a 0.026. Observamos que, tras ajustar el gasto en la Secretaría del Ambiente para ser una  proporción sobre el ingreso de cada estado, deja de existir una relación importante entre este porcentaje y la proporcion de gasto destinado a la Secretaría (pasa de un 0.984 a un 0.003). Finalmente, observamos una disminución en los efectos de la densidad de población en el porcentaje de población mayor a sesenta años (0.324 contra -0.024).
+
+![Tabla II - Correlación](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla II - Cor.png)
+
+En la tabla, encontramos un aumento en la correlación entre las variables sobre las cuáles está construido el índice étnico, siendo que los porcentajes de población indígena y afrodescendiente pasan de correlacionarse en 0.173 a nivel distrital, hasta una correlación de 0.324 para el nivel estatal. A su vez, notamos un aumento en el efecto de la población afrodescendiente, pues su valor pasa de -0.271 a -0.442; el efecto del porcentaje de población indígena se mantiene  marginalmente constante (-0.999 para ambos casos).La densidad de población pierde su efecto en ambas variables, por un lado su relación con la población indígena pasa de -0.296 a -0.051 y para la población afrodescendiente de 0.115 a 0.022. Consideramos también el cambio que tiene la relación entre el porcentaje de población estatal  cada variable de etnicidad: para la población indígena, la relación disminuye, pasando de 0.104 a -0.035; para la población afrodescendiente, cambia de signo pero pierde magnitud, pues pasa de -0.214 a 0.085; para el índice étnico, se mantiene insignificante al aumentar de -0.080 a 0.026.
+
+En lo que refiere a la distancia, el efecto del porcentaje estatal en la aproximación de su valor mínimo cambia de signo y magnitud, pasando de una relación positiva de 0.275 a nivel distrital a un valor negativo de -0.10 a nivel estatal. También observamos un aumento en la correlación entre la densidad poblacional y la distancia: mientras la relación distrital es de -0.422, la estatal es de -0.55. Algo realmente intrigante es que la relación entre la distancia y las variables del índice étnico resulta en un incremento del efecto. Así, la relación entre el índice étnico pasa de tener una relación positiva importante con la distancia de 0.053 a 0.386. Esto se desglosa en un aumento en el efecto negativo de la distancia en el porcentaje de población indígena (de -0.035 a -0.385) y una disminución pequeña para la población afrodescendiente (-0.189 a -0.167).
+
+Para terminar, consideramos los efectos de cada variable independiente en la variable dependiente de proporción de gasto ambiental. Dentro de la tabla de correlación, las variables que parecen tener una conexión negativa con la propoción de gasto son el porcentaje de la población de personas mayores a 60 años (-0.102), el porcentaje de población afrodescendiente (-0.250) y la aproximación de la distancia (-0.300). Por su parte, la variable de índice étnico tiene una relación negativa, pero es apenas importante (-0.099). Las variables que parecen generar un incremento en el gasto público son la densidad de población (0.146), la proporción de población indígena (0.146). Este párrafo es de peculiar interés por esclarecer las expectativas sobre los resutlados de la regresión lineal sobre la que se reportarán los resultados. 
+
+
+![Estadística descriptiva](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla II - Esta.Desc.png)
+
+
+![Anexo I: Scatterplot de Variables Geodistritales](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla 1 - Scatter de cor.png)
+
+
+
+![Anexo II: Scatterplot de correlación entre variables estatales](C:/Users/socap/OneDrive/Documentos/GitHub/Gasto-publico-en-ANPs-2017/Visualizaciones/Preprocesadas/Tabla II - Scatter de cor.png)
+
+
+## References
+
+
+

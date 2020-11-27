@@ -38,6 +38,19 @@ ANPs_84$IND=1:182 #INDEX
 #ANPs_84=as(ANPs_84,"Spatial")
 #sp_ANPs_84=SpatialPoints(ANPs_84)
 
+
+nearest_feature=function(x){
+  st_nearest_feature(st_transform(x, 4326))
+}
+
+NF=c(DAgs, DBC, DBCs,DCam,DCoa,
+                  DCol, DCps,DCua, DCmx, DDur, DGua,
+                  DGue, DHid, DJal,DEdo, DMic, DMor, DNay,
+                  DNL, DOax,DPue, DQue, DQui,DSLP, DSin, 
+                  DSon, DTab, DTam, DTla, DVer,
+                  DYuc,DZac)
+
+
 # 3.1 Primeras 48 distancias -----------------------------------------------
 
 #   DAgs, DBC, DBCs, DCam, DCoa, DCol. 
@@ -648,17 +661,17 @@ ggplot()+
         labs(title="Distritaciones y área natural protegidas",
              subtitle="Pares de distritos electorales y ANPs con menor distancia",
              caption="Datos: CONANP, INE-INEGI | @sebasdepapel")+
-        
-        theme(
-                text = element_text(color = "#22211d"),
-                plot.background = element_rect(fill = "#f5f5f2", color = NA),
-                panel.background = element_rect(fill = "#f5f5f2", color = NA),
-                legend.background = element_rect(fill = "#f5f5f2", color = NA),
-                
-                plot.title = element_text(size= 15, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
-                plot.subtitle = element_text(size= 12, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
-                plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
-                
-                legend.position = c(0.7, 0.09))+
-        coord_sf(datum=NA)
+  
+  theme(
+    text = element_text(color = "#22211d"),
+    plot.background = element_rect(fill = "#f5f5f2", color = NA),
+    panel.background = element_rect(fill = "#f5f5f2", color = NA),
+    legend.background = element_rect(fill = "#f5f5f2", color = NA),
+    
+    plot.title = element_text(size= 15, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
+    plot.subtitle = element_text(size= 12, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
+    plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
+    
+    legend.position = c(0.7, 0.09))+
+  coord_sf(datum=NA)
 dev.off()

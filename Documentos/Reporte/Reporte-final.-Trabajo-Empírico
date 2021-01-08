@@ -1,0 +1,36 @@
+---
+title: "Reporte Final"
+author: "Sebastián Ocampo Palacios"
+date: "15/12/2020"
+output: pdf_document
+bibliography: Referencias.bib
+csl: chicago-fullnote-bibliography-16th-edition.csl
+---
+
+```{r setup, include=FALSE}
+#Definimos los colores para la identidad gráfica del reporte.
+VDemograficas = "#C05555"
+VANPs = "#59886B"
+VFiscales = "#FFC85C"
+Complementario = "#FFF8C1"
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

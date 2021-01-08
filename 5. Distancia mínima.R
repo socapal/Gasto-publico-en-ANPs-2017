@@ -572,7 +572,9 @@ read.csv("dist_4_sf.csv")
 read.csv("dist_5_sf_sSon.csv")
 
 #Función de transformación WGS84.
-
+to_84=function(x){
+  st_transform(x, 4326)
+}
 DIST= rbind.data.frame(to_84(DAgs), to_84(DBC), to_84(DBCs),to_84(DCam),
             to_84(DCoa),to_84(DCol), to_84(DCps),to_84(DCua),
             to_84(DCmx), to_84(DDur), to_84(DGua),
@@ -594,58 +596,54 @@ transformacion=function(x,y){
          return(s)    
 }
 
-c_distmin=rbind.data.frame(transformacion(distancia_Ags_nn, to_84(DAgs)),
-            transformacion(distancia_BC_nn, to_84(DBC)), 
-            transformacion(distancia_BCs_nn, to_84(DBCs)),
-            transformacion(distancia_Cam_nn, to_84(DCam)),
-            transformacion(distancia_Coa_nn, to_84(DCoa)),
-            transformacion(distancia_Col_nn, to_84(DCol)),
-            transformacion(distancia_Cps_nn, to_84(DCps)),
-            transformacion(distancia_Cua_nn, to_84(DCua)),
-            transformacion(distancia_Cmx_nn, to_84(DCmx)),
-            transformacion(distancia_Dur_nn, to_84(DDur)),
-            transformacion(distancia_Gua_nn, to_84(DGua)),
-            transformacion(distancia_Gue_nn, to_84(DGue)),
-            transformacion(distancia_Hid_nn, to_84(DHid)),
-            transformacion(distancia_Jal_nn, to_84(DJal)),
-            transformacion(distancia_Edo_nn, to_84(DEdo)),
-            transformacion(distancia_Mic_nn, to_84(DMic)),
-            transformacion(distancia_Mor_nn, to_84(DMor)),
-            transformacion(distancia_Nay_nn, to_84(DNay)),
-            transformacion(distancia_NL_nn, to_84(DNL)), 
-            transformacion(distancia_Oax_nn, to_84(DOax)),
-            transformacion(distancia_Pue_nn, to_84(DPue)),
-            transformacion(distancia_Que_nn, to_84(DQue)),
-            transformacion(distancia_Qui_nn, to_84(DQui)),
-            transformacion(distancia_SLP_nn, to_84(DSLP)),
-            transformacion(distancia_Sin_nn, to_84(DSin)),
-            transformacion(distancia_Son_nn, to_84(DSon)),
-            transformacion(distancia_Tab_nn, to_84(DTab)),
-            transformacion(distancia_Tam_nn, to_84(DTam)),
-            transformacion(distancia_Tla_nn, to_84(DTla)),
-            transformacion(distancia_Ver_nn, to_84(DVer)),
-            transformacion(distancia_Yuc_nn, to_84(DYuc)),
-            transformacion(distancia_Zac_nn, to_84(DZac)))
+transformacion(distancia_Ags_nn, st_transform(DAgs,4326))
 
-
+c_distmin=rbind.data.frame(transformacion(distancia_Ags_nn, DAgs),
+            transformacion(distancia_BC_nn, DBC), 
+            transformacion(distancia_BCs_nn, DBCs),
+            transformacion(distancia_Cam_nn, DCam),
+            transformacion(distancia_Coa_nn, DCoa),
+            transformacion(distancia_Col_nn, DCol),
+            transformacion(distancia_Cps_nn, DCps),
+            transformacion(distancia_Cua_nn, DCua),
+            transformacion(distancia_Cmx_nn, DCmx),
+            transformacion(distancia_Dur_nn, DDur),
+            transformacion(distancia_Gua_nn, DGua),
+            transformacion(distancia_Gue_nn, DGue),
+            transformacion(distancia_Hid_nn, DHid),
+            transformacion(distancia_Jal_nn, DJal),
+            transformacion(distancia_Edo_nn, DEdo),
+            transformacion(distancia_Mic_nn, DMic),
+            transformacion(distancia_Mor_nn, DMor),
+            transformacion(distancia_Nay_nn, DNay),
+            transformacion(distancia_NL_nn, DNL), 
+            transformacion(distancia_Oax_nn, DOax),
+            transformacion(distancia_Pue_nn, DPue),
+            transformacion(distancia_Que_nn, DQue),
+            transformacion(distancia_Qui_nn, DQui),
+            transformacion(distancia_SLP_nn, DSLP),
+            transformacion(distancia_Sin_nn, DSin),
+            transformacion(distancia_Son_nn, DSon),
+            transformacion(distancia_Tab_nn, DTab),
+            transformacion(distancia_Tam_nn, DTam),
+            transformacion(distancia_Tla_nn, DTla),
+            transformacion(distancia_Ver_nn, DVer),
+            transformacion(distancia_Yuc_nn, DYuc),
+            transformacion(distancia_Zac_nn, DZac))
+View(c_distmin)
+ 
+#Base de datos general       
 DIST$CVE_FED=CVE_FED=(DIST$entidad *100+DIST$distrito)
 DIST$c_ANPCercana= c_distmin$X1
 DIST$c_distmin = c_distmin$X2
 
+#Dataframe Distancias nngeo
+c_distmin$CVE_FED=(DIST$entidad *100+DIST$distrito)
+colnames(c_distmin)=c("c_ANPCercana","c_distmin","CVE_FED")
 
+#Guardamos. 
 
-#Faltan también las variables de distancia por medio de sf. 
-#Por ahora el código no lo cubre, porque que hueva.
-
-GEOS=read.csv("Bases de datos/Generadas/GEOS.csv") #Datos Geoestadísticos
-GEOS$c_ANPCercana=c_distmin$X1
-GEOS$c_distmin=c_distmin$X2
-
-#Recuerda primero eliminar la columna de geometría, aunque 
-#ten en consideración que se utiliza para la visualización de
-#la sección 6.
-#    write.csv(DIST, "Bases de Datos/Generadas/DIST.csv")
-write.csv(GEOS, "Bases de Datos/Generadas/GEOS_Respaldo.csv")
+saveRDS(c_distmin, file="c_distmin.rds")
 
 
 
@@ -657,7 +655,7 @@ png('Pares.png', pointsize=10, width=1800, height=1200, res=300)
 ggplot()+
         geom_sf(data=Centroides_84(DIST), color="#C05555")+
         geom_sf(data=Centroides_84(ANPs), color="#59886B")+
-        geom_sf(data=st_connect(Centroides_84(DIST), Centroides_84(ANPs), DIST$c_ANPCercana), add = TRUE)+
+        geom_sf(data=st_connect(Centroides_84(DIST), Centroides_84(ANPs), DIST$c_ANPCercana, add = TRUE))+
         labs(title="Distritaciones y área natural protegidas",
              subtitle="Pares de distritos electorales y ANPs con menor distancia",
              caption="Datos: CONANP, INE-INEGI | @sebasdepapel")+
@@ -674,4 +672,5 @@ ggplot()+
     
     legend.position = c(0.7, 0.09))+
   coord_sf(datum=NA)
+
 dev.off()

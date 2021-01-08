@@ -8,6 +8,10 @@ library(viridis)
 library(rgdal)
 library(stringr)
 
+VDemograficas= "#C05555"
+VANPs="#59886B"
+VFiscales="#FFC85C"
+VComplementario="#FFF8C1"
 
 #Cargamos bases de datos, 
 ##ANPs tiene los polígonos de las Áreas Naturales Protegidas (ANPs)
@@ -15,11 +19,30 @@ library(stringr)
 ##GEOS almacena la información geoestadística de los distritos electorales
 ##D{Ent} son los polígonos electorales para cada entidad.
 
+#SHPs de Áreas Naturales Protegidas
 ANPs= st_read("Bases de datos/SHP/SHAPE_ANPS/182ANP_Geo_ITRF08_Agosto_2020.shp")
 Reg= st_read("Bases de datos/SHP/Regionalizacion_22052017/Regionalización_22052017.shp")
-GEOS=read.csv("Bases de datos/Generadas/GEOS.CSV")
 
-View(GEOS)
+#Geoestadística
+GEOS=read.csv("Bases de datos/Generadas/GEOS.CSV")
+names(GEOS)
+#Recodificamos las variables de la base de datos GEOS.
+GEOS=data.frame(CVE_ENT=GEOS$Entidad, distrito=GEOS$distrito,
+                CVE_FED=GEOS$Clave.Federal,
+                IND_002=GEOS$Porcentaje.Población.Estatal,
+                IND_824=GEOS$Porcentaje.Población.60.,
+                IND_047=GEOS$`Densidad.de.Población..km².`,
+                IND_055=GEOS$Estimador.Viviendas.Particulares, 
+                IND_141=GEOS$Población.Autoadscrita.Indígena,
+                IND_128=GEOS$Población.Aut..Afrodescendiente,
+                Ethnic=GEOS$Índice.Étnico, 
+                c_distmin=GEOS$Aprox..Distancia.Mínima,
+                c_ANPCercana=GEOS$ANP.Cercana)
+names(GEOS)
+
+
+
+#SHP Distritos
 DBC= read_sf("Bases de datos/SHP/disfed2018/bc/DISTRITO.shp")
 DBCs=read_sf("Bases de datos/SHP/disfed2018/bcs/DISTRITO.shp")
 DSin= read_sf("Bases de datos/SHP/disfed2018/sin/DISTRITO.shp")
@@ -53,17 +76,14 @@ DCol=read_sf("Bases de datos/SHP/disfed2018/col/DISTRITO.shp")
 DNay=read_sf("Bases de datos/SHP/disfed2018/nay/DISTRITO.shp")
 DAgs=read_sf("Bases de datos/SHP/disfed2018/ags/DISTRITO.shp")
 
-#Generamos el Índice "Ethnic" 100-%Pob. ?ndigena - %Pob. afrodescendiente
-GEOS$Ethnic= 100-GEOS$IND_141-GEOS$IND_128
-summary(GEOS$Ethnic)
 
+#Graficamos la var. de diversidad étnica
 GEOS %>%
   ggplot( aes(x=Ethnic)) +
   geom_histogram(bins=10, fill='skyblue', color='#69b3a2')
 
 
 #REGIONES.
-
 
 # 4.1 | Región Uno - Península de Baja California y Pacífico Norte ----------
 
@@ -90,7 +110,7 @@ GDREG1= ggplot()+
           fill="#88B5D7", size=0, color = "White") + 
   geom_sf(data=DISTBC, aes(fill=Ethnic), size=0, color = "White")+
   geom_sf(data=DISTBCs, aes(fill=Ethnic), size=0, color = "White")+
-  scale_fill_continuous(low ="#ffeda0", high="#f03b20", guide = guide_legend( keyheight = unit(3, units = "mm"), keywidth=unit(12, units = "mm"), label.position = "bottom", title.position = 'top', nrow=1) ) +
+  scale_fill_continuous(low =VDemograficas, high=VComplementario, guide = guide_legend( keyheight = unit(3, units = "mm"), keywidth=unit(12, units = "mm"), label.position = "bottom", title.position = 'top', nrow=1) ) +
   geom_sf(data=ANPsi, color="#0F4B78")+
   labs(title="Distribución étnica por región", 
        subtitle="Península de Baja California y Pacífico Norte",
@@ -151,7 +171,7 @@ GDREG2= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.3, 0.09))+
   coord_sf(datum=NA)
 GDREG2 
 
@@ -200,9 +220,9 @@ GDREG3= ggplot()+
     
     plot.title = element_text(size= 15, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
-    plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
+    plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.25, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.26, 0.085))+
   coord_sf(datum=NA)
 GDREG3 
 
@@ -261,8 +281,9 @@ GDREG4= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.3, 0.06))+
   coord_sf(datum=NA)
+
 GDREG4
 
 
@@ -319,11 +340,9 @@ GDREG5= ggplot()+
     plot.title = element_text(size= 15, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
-    
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.09, 0.08))+
   coord_sf(datum=NA)
 GDREG5
-
 
 
 # 4.6 | Región Seis - Península de Yucatán y Caribe Mexicano --------------
@@ -352,7 +371,7 @@ GDREG6= ggplot()+
   geom_sf(data=DISTQui, aes(fill=Ethnic), size=0, color = "White")+
   geom_sf(data=DISTYuc, aes(fill=Ethnic), size=0, color = "White")+
   geom_sf(data=DISTCam, aes(fill=Ethnic), size=0, color = "White")+
-  scale_fill_continuous(low ="#ffeda0", high="#f03b20", guide = guide_legend( keyheight = unit(3, units = "mm"), keywidth=unit(12, units = "mm"), label.position = "bottom", title.position = 'top', nrow=1) ) +
+  scale_fill_continuous(low ="#ffeda0", high="#f03b20", guide = guide_legend( keyheight = unit(4, units = "mm"), keywidth=unit(12, units = "mm"), label.position = "bottom", title.position = 'top', nrow=4, reverse = TRUE) ) +
   geom_sf(data=ANPsi, color="#0F4B78")+
   labs(title="Distribución étnica por región", 
        subtitle="Península de Yucatán y Caribe Mexicano",
@@ -368,17 +387,13 @@ GDREG6= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.10,0.70))+
   coord_sf(datum=NA)
 GDREG6
 
 
-
 # 4.7 | Región Siete - Frontera Sur, Istmo y Pacífico Sur -----------------
 
-##Contiene distritos de Chiapas y Oaxaca.
-DCps=read_sf("fed/shp/disfed2018/cps/DISTRITO.shp")
-DOax=read_sf("fed/shp/disfed2018/oax/DISTRITO.shp")
 
 ###Generamos un subset para cada entidad federativa o estado.
 GEOSCps=subset(GEOS, GEOS$CVE_ENT==7 & GEOS$distrito>0)
@@ -416,9 +431,10 @@ GDREG7= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.8, 0.08))+
   coord_sf(datum=NA)
 GDREG7
+
 
 
 # 4.8 | Región Ocho - Centro y Eje Neovolcánico ---------------------------
@@ -474,7 +490,7 @@ GDREG8= ggplot()+
   geom_sf(data=filter(DISTPue, !(distrito%in%c(1,2,3))), aes(fill=Ethnic), size=0, color = "White")+
   geom_sf(data=subset(DISTGua, DISTGua$distrito==1), aes(fill=Ethnic), size=0, color = "White")+
   geom_sf(data=filter(DISTMic, (distrito%in%c(3,6))), aes(fill=Ethnic), size=0, color = "White")+
-  scale_fill_continuous(low ="#ffeda0", high="#f03b20", guide = guide_legend( keyheight = unit(3, units = "mm"), keywidth=unit(12, units = "mm"), label.position = "bottom", title.position = 'top', nrow=1) ) +
+  scale_fill_continuous(low ="#ffeda0", high="#f03b20", guide = guide_legend( keyheight = unit(3, units = "mm"), keywidth=unit(9, units = "mm"), label.position = "bottom", title.position = 'top', nrow=1) ) +
   geom_sf(data=ANPsi, color="#0F4B78")+
   labs(title="Distribución étnica por región", 
        subtitle="Centro y Eje Neovolcánico",
@@ -490,7 +506,7 @@ GDREG8= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.22, 0.015))+
   coord_sf(datum=NA)
 GDREG8
 
@@ -546,7 +562,7 @@ GDREG9= ggplot()+
     plot.subtitle = element_text(size= 10, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.43, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.3, 0.04))+
   coord_sf(datum=NA)
 GDREG9
 
@@ -605,10 +621,26 @@ GDF=ggplot()+
     plot.title = element_text(size= 15, hjust=0.01, color = "#4e4d47", margin = margin(b = -0.1, t = 0.4, l = 2, unit = "cm")),
     plot.caption = element_text( size=10, color = "#4e4d47", margin = margin(b = 0.3, r=-99, unit = "cm") ),
     
-    legend.position = c(0.7, 0.09))+
+    legend.position = c(0.3, 0.03))+
   coord_sf(datum=NA)
 
 GDF
+
+
+
+# 4.11 Impresión de Objetos -----------------------------------------------
+
+png('Visualizaciones/Preprocesadas/GDREG4.png', pointsize=10, width=1800, height=1800, res=300)
+GDF
+dev.off()
+
+png('Visualizaciones/Preprocesadas/GDREG4.png', pointsize=10, width=2200, height=1800, res=300)
+GDREG5
+dev.off()
+
+png('Visualizaciones/Preprocesadas/GDREG4.png', pointsize=10, width=1800, height=1900, res=300)
+GDREG9
+dev.off()
 
 # 5. Distancia mínima de distritos electorales a ANPs más cercana ---------
 
